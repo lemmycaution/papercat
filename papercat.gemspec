@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency "carrierwave", "~> 0.10.0"
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "uglifier", "~> 2.7.2"
+  s.add_dependency "yui-compressor", "~> 0.12.0"
+  
   s.add_development_dependency "pg"
   
 end
