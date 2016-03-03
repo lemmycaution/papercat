@@ -22,6 +22,7 @@ module Papercat
       end
 
       def create
+        puts "CREATE ----> #{model_params.inspect}"
         @record = model.new(model_params)
         @record.save
         respond_with(@record, location: record_path)
@@ -77,6 +78,7 @@ module Papercat
         params.require(model_name).permit(permitted_attributes)
       end
       
+
       def check_xhr!
         render nothing: true, satus: 400 and return unless request.xhr?
       end

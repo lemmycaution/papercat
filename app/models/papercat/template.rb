@@ -69,6 +69,14 @@ module Papercat
 
     scope :partials, -> { get(partial: true) }
   
+    def pathname
+      self.path
+    end
+    
+    def as_json options = {}
+      super(options.update(methods: [:pathname, :body, :format, :handler, :locale, :partial, :path], except: [:data]))
+    end
+  
     private
   
     def clear_cache

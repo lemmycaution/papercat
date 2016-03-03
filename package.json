@@ -1,0 +1,23 @@
+{
+  "name": "papercat",
+  "version": "0.0.1",
+  "description": "A cat publishes your documents",
+  "author": "Onur Uyar <onur@hackberry.biz>",
+  "license": "MIT",
+  "repository": "https://github.com/hackberry-gh/papercat",
+  "scripts": {
+    "build": "$(npm bin)/webpack --progress --colors",
+    "start": "$(npm bin)/webpack --watch --progress --profile --display-module"
+  },
+  "devDependencies": {
+    "babel": "^4.7.12",
+    "babel-loader": "^4.1.0",
+    "riot": "^2.0.13",
+    "webpack": "^1.7.3",
+    "webpack-dev-server": "^1.7.0"
+  },
+  "dependencies": {
+    "codemirror": "^5.12.0",
+    "jquery": "^2.2.1"
+  }
+}

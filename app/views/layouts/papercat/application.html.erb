@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Papercat</title>
-  <%= stylesheet_link_tag    "papercat/application", media: "all" %>
-  <%= javascript_include_tag "papercat/application" %>
+  <title>Papercat | Admin</title>
+  <%= stylesheet_link_tag "papercat/application", media: "all" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
 <%= yield %>
-
+<%= javascript_include_tag "papercat/application" %>
 </body>
 </html>

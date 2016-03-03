@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
 
-  mount Papercat::Engine => "/papercat"
+  mount Papercat::Engine => "/"
 end

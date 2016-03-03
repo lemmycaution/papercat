@@ -1,0 +1,25 @@
+@import "fonts";
+@import "bass/basscss";
+@import "codemirror";
+
+#error_explanation {
+  border-radius: $border-radius;
+  background-color: $red;
+  color: darken($red, 30);
+  padding: $space-1 $space-2;
+  margin-bottom: $space-2;
+  h2 { 
+    margin-top: 0;
+    font-size: $h3; 
+  }
+  ul{
+    margin: 0;
+  }
+}
+
+.inline-error {
+  display: block;
+  margin-top: -$space-2;
+  margin-bottom: $space-2;
+  color: $red;
+}

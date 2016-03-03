@@ -2,7 +2,15 @@ require 'test_helper'
 
 module Papercat
   class TemplateTest < ActiveSupport::TestCase
-
+    test "validates" do
+      t = Template.create(data: {
+        :format => "html",
+        :handler => "erb",
+        :locale => "en",
+        :partial => false
+      })
+      refute t.persisted?
+    end
     test "resolver returns a template with the saved body" do
       resolver = Template::Resolver.instance
       details  = { :formats => [:html],  :handlers => [:erb], :locale => [:en] }
