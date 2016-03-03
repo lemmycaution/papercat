@@ -14,6 +14,10 @@ module Papercat
 
     before_save :minify
     
+    def as_json options = {}
+      super(options.update(methods: [:pathname, :source], except: [:data]))
+    end
+    
     private
     
     def minify

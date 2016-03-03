@@ -16,7 +16,10 @@ api.request = function(method, path, params, callback) {
       xhr.setRequestHeader("X-Csrf-Token", $('[name=csrf-token]').attr('content'));
     },
   })
-  .fail((xhr) => api.trigger(`request.error.${xhr.status}`, xhr.responseJSON && xhr.responseJSON.errors))
+  .fail((xhr) => {
+    api.trigger(`request.error.${xhr.status}`, xhr.responseJSON && xhr.responseJSON.errors)
+    api.trigger(`request.error`, xhr)
+  })
   .then((result) => {
     if (typeof callback === 'function') {
       callback(result)
