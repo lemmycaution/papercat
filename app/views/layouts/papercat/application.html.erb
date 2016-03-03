@@ -7,6 +7,6 @@
 </head>
 <body data-content-css="<%= asset_path "application.css" %>">
 <%= yield %>
-<%= javascript_include_tag "papercat/application" %>
+<%= javascript_include_tag "papercat/application" if current_user %>
 </body>
 </html>

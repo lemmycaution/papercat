@@ -12497,7 +12497,7 @@
 	  });
 	
 	  riot.route("/", function () {
-	    _this.update({ view: null, resource: null, id: null });
+	    _this.update({ view: "index", resource: "pages", id: null });
 	  });
 	
 	  riot.route("/*", function (resource) {
@@ -12530,7 +12530,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-header", "\n  <header class=\"fixed top-0 left-0 right-0 bg-darken-4 white z4\">\n    <a if=\"{ opts.view === 'index' }\" class=\"btn btn-narrow\" href=\"{ parent.resource }/new\" title=\"{ parent.resource } / new\" onclick=\"{ parent.navigate }\"><i class=\"fa fa-plus\"></i></a>\n    <virtual if=\"{ opts.view === 'form' }\">\n      <button class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.save }\"><i class=\"fa fa-floppy-o\"></i></button>\n      <button if=\"{ parent.tags.main.opts.id }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.delete }\"><i class=\"fa fa-trash-o\"></i></button>\n\n      <button if=\"{ parent.tags.main.opts.resource === 'pages' }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.toggleEditor }\"><i class=\"fa fa-{ parent.tags.main.currentEditorIcon }\"></i></button>\n\n    </virtual>\n  </header>\n  ", function (opts) {});
+	riot.tag("pc-header", "\n  <header class=\"fixed top-0 left-0 right-0 bg-darken-4 white z4\">\n\n    <div class=\"logo fa-stack inline-block\">\n      <i class=\"fa fa-file-o fa-stack-2x\"></i>\n      <i class=\"fa fa-paw fa-stack-1x\"></i>\n    </div>\n\n    <a if=\"{ opts.view === 'index' }\" class=\"btn btn-narrow\" href=\"{ parent.resource }/new\" title=\"{ parent.resource } / new\" onclick=\"{ parent.navigate }\"><i class=\"fa fa-plus\"></i></a>\n    <virtual if=\"{ opts.view === 'form' }\">\n      <button class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.save }\"><i class=\"fa fa-floppy-o\"></i></button>\n      <button if=\"{ parent.tags.main.opts.id }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.delete }\"><i class=\"fa fa-trash-o\"></i></button>\n\n      <button if=\"{ parent.tags.main.opts.resource === 'pages' }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.toggleEditor }\"><i class=\"fa fa-{ parent.tags.main.currentEditorIcon }\"></i></button>\n\n    </virtual>\n  </header>\n  ", "pc-header .logo { transform:scale(0.5);margin-top: -3px; }", function (opts) {});
 
 /***/ },
 /* 7 */
@@ -12578,7 +12578,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-dock", "<footer class=\"fixed bottom-0 left-0 right-0 center z4\">\n  \n  <a each=\"{ items }\" class=\"btn btn-narrow bg-darken-4 white m1\" href=\"{ href }\" title=\"{ href }\" onclick=\"{ parent.parent.navigate }\">\n    <i class=\"fa fa-fw fa-{ icon }\"></i>\n  </a>\n\n  </footer>", function (opts) {
+	riot.tag("pc-dock", "<footer class=\"fixed bottom-0 left-0 right-0 center z4\">\n  \n  <a each=\"{ items }\" class=\"btn btn-narrow bg-darken-4 white m1\" href=\"{ href }\" title=\"{ href }\" onclick=\"{ parent.parent.navigate }\">\n    <i class=\"fa fa-fw fa-{ icon }\"></i>\n  </a>\n  <a class=\"btn btn-narrow bg-darken-4 white m1\" href=\"/users/sign_out\" title=\"signout\">\n    <i class=\"fa fa-fw fa-sign-out\"></i>\n  </a>\n\n  </footer>", function (opts) {
 	  this.items = [{ href: "templates", icon: "code" }, { href: "javascripts", icon: "flash" }, { href: "stylesheets", icon: "paint-brush" }, { href: "pages", icon: "file-text-o" }];
 	});
 

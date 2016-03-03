@@ -29,7 +29,7 @@ riot.tag('pc-app',
     })
 
     riot.route('/', () => {
-      this.update({view: null, resource: null, id: null})
+      this.update({view: 'index', resource: 'pages', id: null})
     })
     
     riot.route('/*', (resource) => {

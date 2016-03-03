@@ -3,6 +3,7 @@ PATH
   specs:
     papercat (0.0.1)
       carrierwave (~> 0.10.0)
+      devise
       rails (~> 4.2.5.2)
       responders (~> 2.0)
       sass-rails
@@ -48,6 +49,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     arel (6.0.3)
+    bcrypt (3.1.10)
     builder (3.2.2)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
@@ -55,6 +57,13 @@ GEM
       json (>= 1.7)
       mime-types (>= 1.16)
     concurrent-ruby (1.0.1)
+    devise (3.5.6)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      responders
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
     erubis (2.7.0)
     execjs (2.6.0)
     globalid (0.3.6)
@@ -70,6 +79,7 @@ GEM
     minitest (5.8.4)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
+    orm_adapter (0.5.0)
     pg (0.18.4)
     rack (1.6.4)
     rack-test (0.6.3)
@@ -123,6 +133,8 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    warden (1.2.6)
+      rack (>= 1.0)
     yui-compressor (0.12.0)
 
 PLATFORMS

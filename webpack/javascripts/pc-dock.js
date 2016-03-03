@@ -9,6 +9,9 @@ riot.tag('pc-dock',
   <a each="{ items }" class="btn btn-narrow bg-darken-4 white m1" href="{ href }" title="{ href }" onclick="{ parent.parent.navigate }">
     <i class="fa fa-fw fa-{ icon }"></i>
   </a>
+  <a class="btn btn-narrow bg-darken-4 white m1" href="/users/sign_out" title="signout">
+    <i class="fa fa-fw fa-sign-out"></i>
+  </a>
 
   </footer>`,
 
