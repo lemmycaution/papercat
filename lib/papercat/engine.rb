@@ -1,4 +1,5 @@
 require 'carrierwave'
+require 'responders'
 require 'papercat/uniqueness_validator'
 
 module Papercat
