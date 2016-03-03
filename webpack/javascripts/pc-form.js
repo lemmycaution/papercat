@@ -25,6 +25,7 @@ riot.mixin('tinymceMixin', {
           selector:'textarea.wyswyg',  
           menubar: false, 
           statusbar: false,
+          verify_html : false,
           content_css : $('body').data('content-css')
         })
         .then(()=> {
