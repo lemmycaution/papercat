@@ -66,6 +66,7 @@ module Papercat
     validates :handler, inclusion: ActionView::Template::Handlers.extensions.map(&:to_s)
         
     after_save :clear_cache
+    before_create :set_partial_false, if: 'partial.nil?'
 
     scope :partials, -> { get(partial: true) }
   
@@ -81,6 +82,11 @@ module Papercat
   
     def clear_cache
       Resolver.instance.clear_cache
+    end
+    
+    def set_partial_false
+      self.partial = false
+      true
     end
   
 
