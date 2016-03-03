@@ -3,7 +3,7 @@ require_dependency "papercat/application_controller"
 module Papercat
   module Api
     class BaseController < ApplicationController
-
+      before_action :check_xhr!
       before_action :set_collection, only: [:index]
       before_action :set_record, only: [:show, :update, :destroy]
 
@@ -75,6 +75,10 @@ module Papercat
 
       def model_params
         params.require(model_name).permit(permitted_attributes)
+      end
+      
+      def check_xhr!
+        render nothing: true, satus: 400 and return unless request.xhr?
       end
     end
   end

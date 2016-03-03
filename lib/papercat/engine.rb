@@ -1,6 +1,7 @@
 require 'carrierwave'
 require 'responders'
 require 'papercat/uniqueness_validator'
+require 'papercat/template_resolver'
 
 module Papercat
   class Engine < ::Rails::Engine
