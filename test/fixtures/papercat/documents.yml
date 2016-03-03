@@ -1,0 +1,14 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+<% 1.upto(5) do |i| %>
+document_<%= i %>:
+  data: 
+    pathname: pages/index-<%= i %>
+    content:
+      en:
+        head: 
+          title: Index Page <%= i %>
+          meta:
+            keywords: papercat, html
+        body: Body <%= i %>
+<% end %>
