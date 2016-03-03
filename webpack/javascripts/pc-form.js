@@ -201,6 +201,7 @@ riot.tag('pc-pages-form',
     <pc-input type="text" name="pathname"></pc-input>
     <h5>Metatags</h5>
     <pc-input-hash name="meta" items="{ record.meta }"></pc-input-hash>
+    <pc-input type="checkbox" name="default"></pc-input>
     <pc-textarea name="body" class="code" mode="htmlmixed"></pc-textarea>
     <pc-textarea name="body" class="wyswyg" ></pc-textarea>
   </form>

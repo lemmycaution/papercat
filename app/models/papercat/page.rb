@@ -1,6 +1,6 @@
 module Papercat
   class Page < Document
-    store_accessor :data, :pathname, :title, :meta, :body
+    store_accessor :data, :pathname, :title, :meta, :body, :default
     validates_presence_of :title, :body
     validates_with UniquenessValidator, key: :pathname
     

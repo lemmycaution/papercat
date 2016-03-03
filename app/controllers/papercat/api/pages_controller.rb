@@ -6,7 +6,7 @@ module Papercat
       protected
       
       def permitted_attributes
-        [:pathname, :title, :meta, :body]
+        [:pathname, :title, :meta, :body, :default]
       end
       
     end

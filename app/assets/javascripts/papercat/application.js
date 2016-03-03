@@ -12757,7 +12757,7 @@
 	  this.mixin("formMixin");
 	});
 	
-	riot.tag("pc-pages-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"title\"></pc-input>\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <h5>Metatags</h5>\n    <pc-input-hash name=\"meta\" items=\"{ record.meta }\"></pc-input-hash>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n    <pc-textarea name=\"body\" class=\"wyswyg\" ></pc-textarea>\n  </form>\n  ", function (opts) {
+	riot.tag("pc-pages-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"title\"></pc-input>\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <h5>Metatags</h5>\n    <pc-input-hash name=\"meta\" items=\"{ record.meta }\"></pc-input-hash>\n    <pc-input type=\"checkbox\" name=\"default\"></pc-input>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n    <pc-textarea name=\"body\" class=\"wyswyg\" ></pc-textarea>\n  </form>\n  ", function (opts) {
 	  var _this = this;
 	
 	  this.defaultRecord = { meta: {} };

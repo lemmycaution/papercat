@@ -7,7 +7,8 @@ module Papercat
     layout 'papercat/page'
 
     def show
-      @page = Page.at(params[:path])
+      @page = Page.at(params[:path]) || Page.get(default: true).first
+      redirect_to '/404' and return unless @page
     end
 
   end
