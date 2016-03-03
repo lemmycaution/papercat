@@ -11,7 +11,7 @@ riot.tag('pc-app',
 
   `
   <pc-header view="{ view }"></pc-header>
-  <div class="py4 main"></div>
+  <div class="py4 main { 'bg-white': view === 'form'}"></div>
   <pc-dock></pc-dock>
   `,
 

@@ -21,5 +21,32 @@
   display: block;
   margin-top: -$space-2;
   margin-bottom: $space-2;
-  color: $red;
+  background-color: $red;
+  
+  padding: $space-1;
+}
+.inline-error.mt0{
+  margin-top:0;
+}
+.mce-panel, .mce-btn, .mce-btn button {
+  background-color: $white !important;
+}
+.mce-btn:hover, .mce-btn:focus {
+  border-color: $white !important;
+  i {
+    color: $blue;
+  }
+}
+.mce-tinymce.mce-container.mce-panel {
+  border: 0;
+}
+.mce-toolbar-grp.mce-container.mce-panel.mce-stack-layout-item.mce-first {
+  border-top-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;  
+  border-radius: $border-radius;
+}
+
+.CodeMirror {
+  height: auto;
 }

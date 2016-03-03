@@ -24,8 +24,6 @@ riot.mixin('tinymceMixin', {
         .then(()=> {
           this.tinyMce = tinymce.editors[0]
 
-          $('.CodeMirror.cm-s-default', this.root).css({display: 'none'})
-          
           this.tinyMce.on('change', () => {
             this.record[this.wyswygFieldName] = this.tinyMce.getContent()
             $textarea.val(this.record[this.wyswygFieldName])
@@ -86,11 +84,11 @@ riot.mixin('formMixin', {
         this.update({record})
         riot.route(`${ opts.resource }/${ record.id }/edit`, `${ opts.resource } / edit`, true)
       }
-      if (this.$saveBtn) this.$saveBtn.text("Save").removeAttr('disabled')
+      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
     }
     let onRequestError = (xhr) => {
       if (xhr.status === 422) this.update({errors: xhr.responseJSON.errors})
-      if (this.$saveBtn) this.$saveBtn.text("Save").removeAttr('disabled')
+      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
     }
 
     this.on('mount', () => {
@@ -118,7 +116,8 @@ riot.mixin('formMixin', {
 
     this.save = (e) => {
       this.$saveBtn = $(e.currentTarget)
-      this.$saveBtn.text("Saving").attr('disabled', true)
+      this.$saveBtn.orgHtml = this.$saveBtn.html()
+      this.$saveBtn.html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', true)
       
       e.preventDefault()
       let data = {[this.modelName]: this.record}
@@ -198,11 +197,12 @@ riot.tag('pc-pages-form',
 
   `
   <form class="px2" onsubmit="{ ignoreSubmit }">
-    <pc-input type="text" name="pathname"></pc-input>
     <pc-input type="text" name="title"></pc-input>
+    <pc-input type="text" name="pathname"></pc-input>
+    <h5>Metatags</h5>
     <pc-input-hash name="meta" items="{ record.meta }"></pc-input-hash>
-    <pc-textarea name="body" class="wyswyg" ></pc-textarea>
     <pc-textarea name="body" class="code" mode="htmlmixed"></pc-textarea>
+    <pc-textarea name="body" class="wyswyg" ></pc-textarea>
   </form>
   `,
 
@@ -215,16 +215,22 @@ riot.tag('pc-pages-form',
     this.toggleEditor = (e) => {
       e.preventDefault()
       this.update()
-      if (this.tinyMce.isHidden()) {
+      if (this.currentEditorIcon === 'code') {
         this.currentEditorIcon = 'eye'
-        this.tinyMce.show()
-        $('.CodeMirror.cm-s-default', this.root).css({display: 'none'})
+        // this.tinyMce.show()
+        // $('.CodeMirror.cm-s-default', this.root).css({display: 'none'})
+        $('.code', this.root).toggleClass('hide', true)
+        $('.wyswyg', this.root).toggleClass('hide', false)
       } else {
         this.currentEditorIcon = 'code'
-        this.tinyMce.hide()
-        $('.CodeMirror.cm-s-default', this.root).css({display: 'block'})
+        // this.tinyMce.hide()
+        // $('.CodeMirror.cm-s-default', this.root).css({display: 'block'})
+        $('.code', this.root).toggleClass('hide', false)        
+        $('.wyswyg', this.root).toggleClass('hide', true)
       }
     }
+    
+    this.on('mount', () => $('.code', this.root).toggleClass('hide', true))
     
     this.mixin('tinymceMixin')
     this.mixin('codeMirrorMixin')

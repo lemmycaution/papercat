@@ -12481,7 +12481,7 @@
 	
 	__webpack_require__(10);
 	
-	riot.tag("pc-app", "\n  <pc-header view=\"{ view }\"></pc-header>\n  <div class=\"py4 main\"></div>\n  <pc-dock></pc-dock>\n  ", function (opts) {
+	riot.tag("pc-app", "\n  <pc-header view=\"{ view }\"></pc-header>\n  <div class=\"py4 main { 'bg-white': view === 'form'}\"></div>\n  <pc-dock></pc-dock>\n  ", function (opts) {
 	  var _this = this;
 	
 	  this.navigate = function (e) {
@@ -12530,7 +12530,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-header", "\n  <header class=\"fixed top-0 left-0 right-0 bg-darken-4 white\">\n    <a if=\"{ opts.view === 'index' }\" class=\"btn btn-narrow\" href=\"{ parent.resource }/new\" title=\"{ parent.resource } / new\" onclick=\"{ parent.navigate }\"><i class=\"fa fa-plus\"></i></a>\n    <virtual if=\"{ opts.view === 'form' }\">\n      <button class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.save }\"><i class=\"fa fa-floppy-o\"></i></button>\n      <button if=\"{ parent.tags.main.opts.id }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.delete }\"><i class=\"fa fa-trash-o\"></i></button>\n\n      <button if=\"{ parent.tags.main.opts.resource === 'pages' }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.toggleEditor }\"><i class=\"fa fa-{ parent.tags.main.currentEditorIcon }\"></i></button>\n\n    </virtual>\n  </header>\n  ", function (opts) {});
+	riot.tag("pc-header", "\n  <header class=\"fixed top-0 left-0 right-0 bg-darken-4 white z4\">\n    <a if=\"{ opts.view === 'index' }\" class=\"btn btn-narrow\" href=\"{ parent.resource }/new\" title=\"{ parent.resource } / new\" onclick=\"{ parent.navigate }\"><i class=\"fa fa-plus\"></i></a>\n    <virtual if=\"{ opts.view === 'form' }\">\n      <button class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.save }\"><i class=\"fa fa-floppy-o\"></i></button>\n      <button if=\"{ parent.tags.main.opts.id }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.delete }\"><i class=\"fa fa-trash-o\"></i></button>\n\n      <button if=\"{ parent.tags.main.opts.resource === 'pages' }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.toggleEditor }\"><i class=\"fa fa-{ parent.tags.main.currentEditorIcon }\"></i></button>\n\n    </virtual>\n  </header>\n  ", function (opts) {});
 
 /***/ },
 /* 7 */
@@ -12578,7 +12578,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-dock", "<footer class=\"fixed bottom-0 left-0 right-0 center\">\n  \n  <a each=\"{ items }\" class=\"btn btn-narrow bg-darken-4 white m1\" href=\"{ href }\" title=\"{ href }\" onclick=\"{ parent.parent.navigate }\">\n    <i class=\"fa fa-fw fa-{ icon }\"></i>\n  </a>\n\n  </footer>", function (opts) {
+	riot.tag("pc-dock", "<footer class=\"fixed bottom-0 left-0 right-0 center z4\">\n  \n  <a each=\"{ items }\" class=\"btn btn-narrow bg-darken-4 white m1\" href=\"{ href }\" title=\"{ href }\" onclick=\"{ parent.parent.navigate }\">\n    <i class=\"fa fa-fw fa-{ icon }\"></i>\n  </a>\n\n  </footer>", function (opts) {
 	  this.items = [{ href: "templates", icon: "code" }, { href: "javascripts", icon: "flash" }, { href: "stylesheets", icon: "paint-brush" }, { href: "pages", icon: "file-text-o" }];
 	});
 
@@ -12621,8 +12621,6 @@
 	      $.getScript("//cdn.tinymce.com/4/tinymce.min.js").then(function () {
 	        tinymce.init({ plugins: "autoresize", selector: "textarea.wyswyg", menubar: false, statusbar: false }).then(function () {
 	          _this.tinyMce = tinymce.editors[0];
-	
-	          $(".CodeMirror.cm-s-default", _this.root).css({ display: "none" });
 	
 	          _this.tinyMce.on("change", function () {
 	            _this.record[_this.wyswygFieldName] = _this.tinyMce.getContent();
@@ -12685,11 +12683,11 @@
 	        _this.update({ record: record });
 	        riot.route("" + opts.resource + "/" + record.id + "/edit", "" + opts.resource + " / edit", true);
 	      }
-	      if (_this.$saveBtn) _this.$saveBtn.text("Save").removeAttr("disabled");
+	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
 	    };
 	    var onRequestError = function (xhr) {
 	      if (xhr.status === 422) _this.update({ errors: xhr.responseJSON.errors });
-	      if (_this.$saveBtn) _this.$saveBtn.text("Save").removeAttr("disabled");
+	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
 	    };
 	
 	    this.on("mount", function () {
@@ -12717,7 +12715,8 @@
 	
 	    this.save = function (e) {
 	      _this.$saveBtn = $(e.currentTarget);
-	      _this.$saveBtn.text("Saving").attr("disabled", true);
+	      _this.$saveBtn.orgHtml = _this.$saveBtn.html();
+	      _this.$saveBtn.html("<i class=\"fa fa-refresh fa-spin\"></i>").attr("disabled", true);
 	
 	      e.preventDefault();
 	      var data = _defineProperty({}, _this.modelName, _this.record);
@@ -12758,7 +12757,7 @@
 	  this.mixin("formMixin");
 	});
 	
-	riot.tag("pc-pages-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <pc-input type=\"text\" name=\"title\"></pc-input>\n    <pc-input-hash name=\"meta\" items=\"{ record.meta }\"></pc-input-hash>\n    <pc-textarea name=\"body\" class=\"wyswyg\" ></pc-textarea>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n  </form>\n  ", function (opts) {
+	riot.tag("pc-pages-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"title\"></pc-input>\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <h5>Metatags</h5>\n    <pc-input-hash name=\"meta\" items=\"{ record.meta }\"></pc-input-hash>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n    <pc-textarea name=\"body\" class=\"wyswyg\" ></pc-textarea>\n  </form>\n  ", function (opts) {
 	  var _this = this;
 	
 	  this.defaultRecord = { meta: {} };
@@ -12769,16 +12768,24 @@
 	  this.toggleEditor = function (e) {
 	    e.preventDefault();
 	    _this.update();
-	    if (_this.tinyMce.isHidden()) {
+	    if (_this.currentEditorIcon === "code") {
 	      _this.currentEditorIcon = "eye";
-	      _this.tinyMce.show();
-	      $(".CodeMirror.cm-s-default", _this.root).css({ display: "none" });
+	      // this.tinyMce.show()
+	      // $('.CodeMirror.cm-s-default', this.root).css({display: 'none'})
+	      $(".code", _this.root).toggleClass("hide", true);
+	      $(".wyswyg", _this.root).toggleClass("hide", false);
 	    } else {
 	      _this.currentEditorIcon = "code";
-	      _this.tinyMce.hide();
-	      $(".CodeMirror.cm-s-default", _this.root).css({ display: "block" });
+	      // this.tinyMce.hide()
+	      // $('.CodeMirror.cm-s-default', this.root).css({display: 'block'})
+	      $(".code", _this.root).toggleClass("hide", false);
+	      $(".wyswyg", _this.root).toggleClass("hide", true);
 	    }
 	  };
+	
+	  this.on("mount", function () {
+	    return $(".code", _this.root).toggleClass("hide", true);
+	  });
 	
 	  this.mixin("tinymceMixin");
 	  this.mixin("codeMirrorMixin");
@@ -23844,7 +23851,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-textarea", "\n  <textarea class=\"block col-12 mb2 field { opts.class }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" data-mode=\"{ opts.mode }\">{ parent.record[opts.name] }</textarea>\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
+	riot.tag("pc-textarea", "\n  <textarea class=\"block col-12 mb2 field { opts.class }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" data-mode=\"{ opts.mode }\">{ parent.record[opts.name] }</textarea>\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error mt0\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
 	  this.mixin("setValueByNameMixin");
 	});
 
