@@ -9,9 +9,8 @@ Gem::Specification.new do |s|
   s.version     = Papercat::VERSION
   s.authors     = ["Onur Uyar"]
   s.email       = ["me@onuruyar.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Papercat."
-  s.description = "TODO: Description of Papercat."
+  s.homepage    = "http://github.com/lemmycaution/papercat"
+  s.summary     = "Tiny CMS"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
