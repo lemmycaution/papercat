@@ -12619,7 +12619,13 @@
 	      $textarea.addClass("hide");
 	      _this.wyswygFieldName = $textarea.attr("name");
 	      $.getScript("//cdn.tinymce.com/4/tinymce.min.js").then(function () {
-	        tinymce.init({ plugins: "autoresize", selector: "textarea.wyswyg", menubar: false, statusbar: false }).then(function () {
+	        tinymce.init({
+	          plugins: "autoresize",
+	          selector: "textarea.wyswyg",
+	          menubar: false,
+	          statusbar: false,
+	          content_css: $("body").data("content-css")
+	        }).then(function () {
 	          _this.tinyMce = tinymce.editors[0];
 	
 	          _this.tinyMce.on("change", function () {
