@@ -5,7 +5,7 @@ module Papercat
     validates_with UniquenessValidator, key: :pathname
     
     def as_json options = {}
-      super(options.update(methods: [:pathname, :title, :meta, :body], except: [:data]))
+      super(options.update(methods: [:pathname, :title, :meta, :body, :default], except: [:data]))
     end
     
   end

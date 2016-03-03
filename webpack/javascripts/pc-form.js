@@ -40,6 +40,10 @@ riot.mixin('tinymceMixin', {
               this.tinyMce.setContent(this.record[this.wyswygFieldName])
             }
           })
+          
+          this.on('before-unmount', () => {
+            this.tinyMce.destroy()
+          })
         })
       })
     })

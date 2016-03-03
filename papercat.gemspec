@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Papercat::VERSION
   s.authors     = ["Onur Uyar"]
   s.email       = ["me@onuruyar.com"]
-  s.homepage    = "http://github.com/lemmycaution/papercat"
+  s.homepage    = "https://github.com/lemmycaution/papercat.git"
   s.summary     = "Tiny CMS"
   s.license     = "MIT"
 

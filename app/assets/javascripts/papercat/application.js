@@ -12638,6 +12638,10 @@
 	              _this.tinyMce.setContent(_this.record[_this.wyswygFieldName]);
 	            }
 	          });
+	
+	          _this.on("before-unmount", function () {
+	            _this.tinyMce.destroy();
+	          });
 	        });
 	      });
 	    });
