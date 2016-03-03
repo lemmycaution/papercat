@@ -9,4 +9,5 @@ Papercat::Engine.routes.draw do
   end
   get 'admin' => 'application'
   get ':path' => 'pages#show'
+  root to: 'pages#show', path: "index"
 end
