@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160302230547) do
+ActiveRecord::Schema.define(version: 20160303003748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,5 +24,9 @@ ActiveRecord::Schema.define(version: 20160302230547) do
   end
 
   add_index "papercat_documents", ["data"], name: "papercat_documents_data_idx", using: :gin
+
+  create_table "papercat_images", force: :cascade do |t|
+    t.string "file"
+  end
 
 end
