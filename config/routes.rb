@@ -7,7 +7,8 @@ Papercat::Engine.routes.draw do
       resources :javascripts
       resources :stylesheets
       resources :pages
-      resources :images
+      #resources :images
+      post 'images' => 'images#create'
     end
     get 'admin' => 'application'
     root to: 'application#admin', as: :authenticated_root, path: '/admin'

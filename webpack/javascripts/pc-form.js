@@ -3,145 +3,15 @@
 import $ from 'jquery';
 import riot from 'riot';
 
-import CodeMirror from 'codemirror/lib/codemirror';
-import 'codemirror/mode/htmlmixed/htmlmixed';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/css/css';
-
 import './pc-input';
 import './pc-textarea';
 import './pc-input-hash';
 
-riot.mixin('tinymceMixin', {
-  init: function () {
-    this.on('mount',  () => {
-      let $textarea = $('textarea.wyswyg', this.root)
-      $textarea.addClass('hide')
-      this.wyswygFieldName = $textarea.attr('name')
-      $.getScript('//cdn.tinymce.com/4/tinymce.min.js').then(() => {
-        tinymce
-        .init({ 
-          plugins: 'autoresize', 
-          selector:'textarea.wyswyg',  
-          menubar: false, 
-          statusbar: false,
-          verify_html : false,
-          content_css : $('body').data('content-css')
-        })
-        .then(()=> {
-          this.tinyMce = tinymce.editors[0]
+import './mixins/set_value';
+import './mixins/form';
+import './mixins/tinymce';
+import './mixins/codemirror';
 
-          this.tinyMce.on('change', () => {
-            this.record[this.wyswygFieldName] = this.tinyMce.getContent()
-            $textarea.val(this.record[this.wyswygFieldName])
-          })
-          
-          this.on('update', () => {
-            if (this.record && this.record[this.wyswygFieldName]) {
-              this.tinyMce.setContent(this.record[this.wyswygFieldName])
-            }
-          })
-          
-          this.on('before-unmount', () => {
-            this.tinyMce.destroy()
-          })
-        })
-      })
-    })
-  }
-})
-riot.mixin('codeMirrorMixin', {
-  init: function () {
-    
-    this.on('mount',  () => {
-      let $textarea = $('textarea.code', this.root)
-      this.codeFieldName = $textarea.attr('name')
-      this.codeMirror = CodeMirror.fromTextArea($textarea[0], {
-        lineNumbers: true,
-        mode: $textarea.data('mode')
-      });
-
-      this.codeMirror.on('change', (cm) => {
-        this.record[this.codeFieldName] = cm.getDoc().getValue()
-        $textarea.val(this.record[this.codeFieldName])
-      })
-    })
-    
-    this.on('update', () => {
-      if (this.record && this.record[this.codeFieldName]) {
-        this.codeMirror.setValue(this.record[this.codeFieldName])
-      }
-    })
-    this.on('updated', () => {
-      this.codeMirror.refresh()
-    })
-  }
-});
-
-riot.mixin('setValueByNameMixin', {
-  setValueByName: function (e) {
-    let input = e.currentTarget
-    this.parent.record[input.name] = input.type === 'checkbox' ? 
-      input.checked : 
-      ((input.type === 'radio') ? input.selected : input.value);
-  }
-});
-
-riot.mixin('formMixin', {
-  init: function () {
-    let opts = this.opts;
-    let onRequestSuccess = (record) => {
-      if (record) {
-        this.update({record})
-        riot.route(`${ opts.resource }/${ record.id }/edit`, `${ opts.resource } / edit`, true)
-      }
-      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
-    }
-    let onRequestError = (xhr) => {
-      if (xhr.status === 422) this.update({errors: xhr.responseJSON.errors})
-      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
-    }
-
-    this.on('mount', () => {
-      opts.api.on('request.error', onRequestError)
-      opts.api.on('request.success', onRequestSuccess)
-      if (opts.id) opts.api.request('get', `${ opts.resource }/${ opts.id }`)
-    })
-
-    this.on('before-unmount', () => {
-      opts.api.off('request.error', onRequestError)
-      opts.api.off('request.success', onRequestSuccess)
-    })
-
-    this.on('update', () => {
-      this.record = this.record || this.defaultRecord
-    })
-    
-    this.delete = (e) => {
-      if (window.confirm('Are you sure?')) {
-        opts.api.request('delete', `${ opts.resource }/${ this.record.id }`, null, () => {
-          riot.route(opts.resource, opts.resource)
-        })
-      }
-    }
-
-    this.save = (e) => {
-      this.$saveBtn = $(e.currentTarget)
-      this.$saveBtn.orgHtml = this.$saveBtn.html()
-      this.$saveBtn.html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', true)
-      
-      e.preventDefault()
-      let data = {[this.modelName]: this.record}
-      if (this.record.id) {
-        opts.api.request('put', `${ opts.resource }/${ this.record.id }`, data)
-      } else {
-        opts.api.request('post', opts.resource, data)  
-      }
-    }
-    
-    this.ignoreSubmit = (e) => e.preventDefault()
-  }
-})
 
 riot.tag('pc-templates-form',
 

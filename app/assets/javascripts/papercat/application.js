@@ -12590,15 +12590,15 @@
 	
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 	
-	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
-	
 	var $ = _interopRequire(__webpack_require__(4));
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	var CodeMirror = _interopRequire(__webpack_require__(11));
+	__webpack_require__(11);
 	
 	__webpack_require__(12);
+	
+	__webpack_require__(13);
 	
 	__webpack_require__(14);
 	
@@ -12607,141 +12607,6 @@
 	__webpack_require__(16);
 	
 	__webpack_require__(17);
-	
-	__webpack_require__(18);
-	
-	riot.mixin("tinymceMixin", {
-	  init: function init() {
-	    var _this = this;
-	
-	    this.on("mount", function () {
-	      var $textarea = $("textarea.wyswyg", _this.root);
-	      $textarea.addClass("hide");
-	      _this.wyswygFieldName = $textarea.attr("name");
-	      $.getScript("//cdn.tinymce.com/4/tinymce.min.js").then(function () {
-	        tinymce.init({
-	          plugins: "autoresize",
-	          selector: "textarea.wyswyg",
-	          menubar: false,
-	          statusbar: false,
-	          content_css: $("body").data("content-css")
-	        }).then(function () {
-	          _this.tinyMce = tinymce.editors[0];
-	
-	          _this.tinyMce.on("change", function () {
-	            _this.record[_this.wyswygFieldName] = _this.tinyMce.getContent();
-	            $textarea.val(_this.record[_this.wyswygFieldName]);
-	          });
-	
-	          _this.on("update", function () {
-	            if (_this.record && _this.record[_this.wyswygFieldName]) {
-	              _this.tinyMce.setContent(_this.record[_this.wyswygFieldName]);
-	            }
-	          });
-	
-	          _this.on("before-unmount", function () {
-	            _this.tinyMce.destroy();
-	          });
-	        });
-	      });
-	    });
-	  }
-	});
-	riot.mixin("codeMirrorMixin", {
-	  init: function init() {
-	    var _this = this;
-	
-	    this.on("mount", function () {
-	      var $textarea = $("textarea.code", _this.root);
-	      _this.codeFieldName = $textarea.attr("name");
-	      _this.codeMirror = CodeMirror.fromTextArea($textarea[0], {
-	        lineNumbers: true,
-	        mode: $textarea.data("mode")
-	      });
-	
-	      _this.codeMirror.on("change", function (cm) {
-	        _this.record[_this.codeFieldName] = cm.getDoc().getValue();
-	        $textarea.val(_this.record[_this.codeFieldName]);
-	      });
-	    });
-	
-	    this.on("update", function () {
-	      if (_this.record && _this.record[_this.codeFieldName]) {
-	        _this.codeMirror.setValue(_this.record[_this.codeFieldName]);
-	      }
-	    });
-	    this.on("updated", function () {
-	      _this.codeMirror.refresh();
-	    });
-	  }
-	});
-	
-	riot.mixin("setValueByNameMixin", {
-	  setValueByName: function setValueByName(e) {
-	    var input = e.currentTarget;
-	    this.parent.record[input.name] = input.type === "checkbox" ? input.checked : input.type === "radio" ? input.selected : input.value;
-	  }
-	});
-	
-	riot.mixin("formMixin", {
-	  init: function init() {
-	    var _this = this;
-	
-	    var opts = this.opts;
-	    var onRequestSuccess = function (record) {
-	      if (record) {
-	        _this.update({ record: record });
-	        riot.route("" + opts.resource + "/" + record.id + "/edit", "" + opts.resource + " / edit", true);
-	      }
-	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
-	    };
-	    var onRequestError = function (xhr) {
-	      if (xhr.status === 422) _this.update({ errors: xhr.responseJSON.errors });
-	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
-	    };
-	
-	    this.on("mount", function () {
-	      opts.api.on("request.error", onRequestError);
-	      opts.api.on("request.success", onRequestSuccess);
-	      if (opts.id) opts.api.request("get", "" + opts.resource + "/" + opts.id);
-	    });
-	
-	    this.on("before-unmount", function () {
-	      opts.api.off("request.error", onRequestError);
-	      opts.api.off("request.success", onRequestSuccess);
-	    });
-	
-	    this.on("update", function () {
-	      _this.record = _this.record || _this.defaultRecord;
-	    });
-	
-	    this["delete"] = function (e) {
-	      if (window.confirm("Are you sure?")) {
-	        opts.api.request("delete", "" + opts.resource + "/" + _this.record.id, null, function () {
-	          riot.route(opts.resource, opts.resource);
-	        });
-	      }
-	    };
-	
-	    this.save = function (e) {
-	      _this.$saveBtn = $(e.currentTarget);
-	      _this.$saveBtn.orgHtml = _this.$saveBtn.html();
-	      _this.$saveBtn.html("<i class=\"fa fa-refresh fa-spin\"></i>").attr("disabled", true);
-	
-	      e.preventDefault();
-	      var data = _defineProperty({}, _this.modelName, _this.record);
-	      if (_this.record.id) {
-	        opts.api.request("put", "" + opts.resource + "/" + _this.record.id, data);
-	      } else {
-	        opts.api.request("post", opts.resource, data);
-	      }
-	    };
-	
-	    this.ignoreSubmit = function (e) {
-	      return e.preventDefault();
-	    };
-	  }
-	});
 	
 	riot.tag("pc-templates-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"path\"></pc-input>\n    <pc-input type=\"text\" name=\"format\" ></pc-input>\n    <pc-input type=\"text\" name=\"handler\" ></pc-input>\n    <pc-input type=\"text\" name=\"locale\" ></pc-input>\n    <pc-input type=\"checkbox\" name=\"partial\" ></pc-input>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n  </form>\n  ", function (opts) {
 	  this.defaultRecord = { format: "html", handler: "erb", locale: "en" };
@@ -12804,6 +12669,269 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	riot.tag("pc-input", "\n  <label if=\"{ opts.type === 'checkbox'  }\" class=\"inline-block mb2\"><input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" checked=\"{ parent.record[opts.name] }\" /> { opts.name }</label>\n  <label if=\"{ opts.type === 'radio'  }\" class=\"inline-block mb2\"><input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" selected=\"{ parent.record[opts.name] }\" /> { opts.name }</label>\n  <input if=\"{ opts.type !== 'checkbox' && opts.type !== 'radio' }\" class=\"block col-12 mb2 field\" type=\"{ opts.type }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" value=\"{ parent.record[opts.name] }\" />\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
+	  this.mixin("setValueByNameMixin");
+	});
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	riot.tag("pc-textarea", "\n  <textarea class=\"block col-12 mb2 field { opts.class }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" data-mode=\"{ opts.mode }\">{ parent.record[opts.name] }</textarea>\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error mt0\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
+	  this.mixin("setValueByNameMixin");
+	});
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	riot.tag("pc-input-hash", "\n  <div class=\"metatags mb2 border\">\n\n    <div class=\"clearfix border-bottom\" each=\"{ name, content in opts.items }\">\n      <input type=\"text\" class=\"col col-4 border-none field rounded-left x-group-item\" placeholder=\"Name\" name=\"name\" value=\"{ name }\">\n      <input type=\"text\" class=\"col col-6 border-none field not-rounded x-group-item\" placeholder=\"Content\" name=\"content\" value=\"{ content }\">\n      <a class=\"col col-2 center btn border-left bg-white red rounded-right\" onclick=\"{ removeMetaTag }\"><i class=\"fa fa-times\"></i></a>\n    </div>\n\n    <div class=\"clearfix\">\n      <input name=\"metaTagName\" type=\"text\" class=\"col col-4 border-none  field rounded-left x-group-item\" placeholder=\"Name\">\n      <input name=\"metaTagContent\" type=\"text\" class=\"col col-6 border-none  field not-rounded x-group-item\" placeholder=\"Content\" >\n      <a class=\"col col-2 center btn border-left bg-white rounded-right\" onclick=\"{ addMetaTag }\"><i class=\"fa fa-plus\"></i></a>\n    </div>\n\n  </div>\n  ", function (opts) {
+	  var _this = this;
+	
+	  this.removeMetaTag = function (e) {
+	    // looped item
+	    var item = e.item;
+	    delete _this.opts.items[e.item.name]
+	    // index on the collection
+	    // var index = this.opts.items.indexOf(item)
+	    // remove from collection
+	    // this.opts.items.splice(index, 1)
+	    ;
+	  };
+	
+	  this.addMetaTag = function (e) {
+	    var name = _this.metaTagName.value;
+	    var content = _this.metaTagContent.value;
+	    // var tag = _.find(this.opts.items, function (tag) { return tag.name == name })
+	    var tag = _this.opts.items[name];
+	    if (!tag && name && content) {
+	      _this.metaTagName.value = null;
+	      _this.metaTagContent.value = null;
+	      _this.opts.items[name] = content
+	      // this.opts.items.push({name: name, content: content})
+	      ;
+	    }
+	  };
+	});
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	riot.mixin("setValueByNameMixin", {
+	  setValueByName: function setValueByName(e) {
+	    var input = e.currentTarget;
+	    this.parent.record[input.name] = input.type === "checkbox" ? input.checked : input.type === "radio" ? input.selected : input.value;
+	  }
+	});
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
+	
+	var $ = _interopRequire(__webpack_require__(4));
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	riot.mixin("formMixin", {
+	  init: function init() {
+	    var _this = this;
+	
+	    var opts = this.opts;
+	    var onRequestSuccess = function (record) {
+	      if (record) {
+	        _this.update({ record: record });
+	        riot.route("" + opts.resource + "/" + record.id + "/edit", "" + opts.resource + " / edit", true);
+	      }
+	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
+	    };
+	    var onRequestError = function (xhr) {
+	      if (xhr.status === 422) _this.update({ errors: xhr.responseJSON.errors });
+	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
+	    };
+	
+	    this.on("mount", function () {
+	      opts.api.on("request.error", onRequestError);
+	      opts.api.on("request.success", onRequestSuccess);
+	      if (opts.id) opts.api.request("get", "" + opts.resource + "/" + opts.id);
+	    });
+	
+	    this.on("before-unmount", function () {
+	      opts.api.off("request.error", onRequestError);
+	      opts.api.off("request.success", onRequestSuccess);
+	    });
+	
+	    this.on("update", function () {
+	      _this.record = _this.record || _this.defaultRecord;
+	    });
+	
+	    this["delete"] = function (e) {
+	      if (window.confirm("Are you sure?")) {
+	        opts.api.request("delete", "" + opts.resource + "/" + _this.record.id, null, function () {
+	          riot.route(opts.resource, opts.resource);
+	        });
+	      }
+	    };
+	
+	    this.save = function (e) {
+	      _this.$saveBtn = $(e.currentTarget);
+	      _this.$saveBtn.orgHtml = _this.$saveBtn.html();
+	      _this.$saveBtn.html("<i class=\"fa fa-refresh fa-spin\"></i>").attr("disabled", true);
+	
+	      e.preventDefault();
+	      var data = _defineProperty({}, _this.modelName, _this.record);
+	
+	      if (_this.record.id) {
+	        opts.api.request("put", "" + opts.resource + "/" + _this.record.id, data);
+	      } else {
+	        opts.api.request("post", opts.resource, data);
+	      }
+	    };
+	
+	    this.ignoreSubmit = function (e) {
+	      return e.preventDefault();
+	    };
+	  }
+	});
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var $ = _interopRequire(__webpack_require__(4));
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	riot.mixin("tinymceMixin", {
+	  init: function init() {
+	    var _this = this;
+	
+	    this.on("mount", function () {
+	      var $textarea = $("textarea.wyswyg", _this.root);
+	      $textarea.addClass("hide");
+	      _this.wyswygFieldName = $textarea.attr("name");
+	      $.getScript("//cdn.tinymce.com/4/tinymce.min.js").then(function () {
+	        tinymce.init({
+	          plugins: "autoresize image media textcolor paste",
+	          selector: "textarea.wyswyg",
+	          toolbar: "undo redo | fontselect fontsizeselect styleselect forecolor backcolor | link unlink image media",
+	          menubar: false,
+	          statusbar: false,
+	          verify_html: false,
+	          content_css: $("body").data("content-css"),
+	          paste_data_images: true,
+	          images_upload_url: "api/images",
+	          images_upload_credentials: true
+	        }).then(function () {
+	          _this.tinyMce = tinymce.editors[0];
+	
+	          _this.tinyMce.on("change", function () {
+	            _this.record[_this.wyswygFieldName] = _this.tinyMce.getContent();
+	            $textarea.val(_this.record[_this.wyswygFieldName]);
+	          });
+	
+	          _this.on("update", function () {
+	            if (_this.record && _this.record[_this.wyswygFieldName]) {
+	              _this.tinyMce.setContent(_this.record[_this.wyswygFieldName]);
+	            }
+	          });
+	
+	          _this.on("before-unmount", function () {
+	            _this.tinyMce.destroy();
+	          });
+	        });
+	      });
+	    });
+	  }
+	});
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var $ = _interopRequire(__webpack_require__(4));
+	
+	var riot = _interopRequire(__webpack_require__(1));
+	
+	var CodeMirror = _interopRequire(__webpack_require__(18));
+	
+	__webpack_require__(19);
+	
+	__webpack_require__(21);
+	
+	__webpack_require__(22);
+	
+	riot.mixin("codeMirrorMixin", {
+	  init: function init() {
+	    var _this = this;
+	
+	    this.on("mount", function () {
+	      var $textarea = $("textarea.code", _this.root);
+	      _this.codeFieldName = $textarea.attr("name");
+	      _this.codeMirror = CodeMirror.fromTextArea($textarea[0], {
+	        lineNumbers: true,
+	        mode: $textarea.data("mode")
+	      });
+	
+	      _this.codeMirror.on("change", function (cm) {
+	        _this.record[_this.codeFieldName] = cm.getDoc().getValue();
+	        $textarea.val(_this.record[_this.codeFieldName]);
+	      });
+	    });
+	
+	    this.on("update", function () {
+	      if (_this.record && _this.record[_this.codeFieldName]) {
+	        _this.codeMirror.setValue(_this.record[_this.codeFieldName]);
+	      }
+	    });
+	    this.on("updated", function () {
+	      _this.codeMirror.refresh();
+	    });
+	  }
+	});
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -21701,7 +21829,7 @@
 
 
 /***/ },
-/* 12 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -21709,7 +21837,7 @@
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(11), __webpack_require__(13), __webpack_require__(14), __webpack_require__(15));
+	    mod(__webpack_require__(18), __webpack_require__(20), __webpack_require__(21), __webpack_require__(22));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror", "../xml/xml", "../javascript/javascript", "../css/css"], mod);
 	  else // Plain browser env
@@ -21859,7 +21987,7 @@
 
 
 /***/ },
-/* 13 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -21867,7 +21995,7 @@
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(11));
+	    mod(__webpack_require__(18));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -22259,7 +22387,7 @@
 
 
 /***/ },
-/* 14 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -22269,7 +22397,7 @@
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(11));
+	    mod(__webpack_require__(18));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -23007,7 +23135,7 @@
 
 
 /***/ },
-/* 15 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -23015,7 +23143,7 @@
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(11));
+	    mod(__webpack_require__(18));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -23836,73 +23964,6 @@
 	
 	});
 
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-	
-	var riot = _interopRequire(__webpack_require__(1));
-	
-	riot.tag("pc-input", "\n  <label if=\"{ opts.type === 'checkbox'  }\" class=\"inline-block mb2\"><input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" checked=\"{ parent.record[opts.name] }\" /> { opts.name }</label>\n  <label if=\"{ opts.type === 'radio'  }\" class=\"inline-block mb2\"><input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" selected=\"{ parent.record[opts.name] }\" /> { opts.name }</label>\n  <input if=\"{ opts.type !== 'checkbox' && opts.type !== 'radio' }\" class=\"block col-12 mb2 field\" type=\"{ opts.type }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" value=\"{ parent.record[opts.name] }\" />\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
-	  this.mixin("setValueByNameMixin");
-	});
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-	
-	var riot = _interopRequire(__webpack_require__(1));
-	
-	riot.tag("pc-textarea", "\n  <textarea class=\"block col-12 mb2 field { opts.class }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" data-mode=\"{ opts.mode }\">{ parent.record[opts.name] }</textarea>\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error mt0\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
-	  this.mixin("setValueByNameMixin");
-	});
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-	
-	var riot = _interopRequire(__webpack_require__(1));
-	
-	riot.tag("pc-input-hash", "\n  <div class=\"metatags mb2 border\">\n\n    <div class=\"clearfix border-bottom\" each=\"{ name, content in opts.items }\">\n      <input type=\"text\" class=\"col col-4 border-none field rounded-left x-group-item\" placeholder=\"Name\" name=\"name\" value=\"{ name }\">\n      <input type=\"text\" class=\"col col-6 border-none field not-rounded x-group-item\" placeholder=\"Content\" name=\"content\" value=\"{ content }\">\n      <a class=\"col col-2 center btn border-left bg-white red rounded-right\" onclick=\"{ removeMetaTag }\"><i class=\"fa fa-times\"></i></a>\n    </div>\n\n    <div class=\"clearfix\">\n      <input name=\"metaTagName\" type=\"text\" class=\"col col-4 border-none  field rounded-left x-group-item\" placeholder=\"Name\">\n      <input name=\"metaTagContent\" type=\"text\" class=\"col col-6 border-none  field not-rounded x-group-item\" placeholder=\"Content\" >\n      <a class=\"col col-2 center btn border-left bg-white rounded-right\" onclick=\"{ addMetaTag }\"><i class=\"fa fa-plus\"></i></a>\n    </div>\n\n  </div>\n  ", function (opts) {
-	  var _this = this;
-	
-	  this.removeMetaTag = function (e) {
-	    // looped item
-	    var item = e.item;
-	    delete _this.opts.items[e.item.name]
-	    // index on the collection
-	    // var index = this.opts.items.indexOf(item)
-	    // remove from collection
-	    // this.opts.items.splice(index, 1)
-	    ;
-	  };
-	
-	  this.addMetaTag = function (e) {
-	    var name = _this.metaTagName.value;
-	    var content = _this.metaTagContent.value;
-	    // var tag = _.find(this.opts.items, function (tag) { return tag.name == name })
-	    var tag = _this.opts.items[name];
-	    if (!tag && name && content) {
-	      _this.metaTagName.value = null;
-	      _this.metaTagContent.value = null;
-	      _this.opts.items[name] = content
-	      // this.opts.items.push({name: name, content: content})
-	      ;
-	    }
-	  };
-	});
 
 /***/ }
 /******/ ]);
