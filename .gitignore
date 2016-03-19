@@ -7,4 +7,5 @@ test/dummy/log/*.log
 test/dummy/tmp/
 test/dummy/.sass-cache
 test/dummy/public/uploads
+test/dummy/.env
 node_modules

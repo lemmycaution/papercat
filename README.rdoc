@@ -1,3 +1,7 @@
 = Papercat
 
 This project rocks and uses MIT-LICENSE.
+
+== NOTE on image uploads
+
+add `gem 'carrierwave', github: 'carrierwaveuploader/carrierwave'` to app's Gemfile order to make them work

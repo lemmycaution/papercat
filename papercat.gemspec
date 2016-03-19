@@ -23,7 +23,8 @@ Gem::Specification.new do |s|
   s.add_dependency "yui-compressor", "~> 0.12.0"
   s.add_dependency "sass-rails"
   s.add_dependency "devise"
-  
+  s.add_dependency "fog-aws"
+
   s.add_development_dependency "pg"
-  
+
 end
