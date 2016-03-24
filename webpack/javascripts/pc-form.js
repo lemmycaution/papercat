@@ -79,7 +79,12 @@ riot.tag('pc-pages-form',
   `
   <form class="px2" onsubmit="{ ignoreSubmit }">
     <pc-input type="text" name="title"></pc-input>
-    <pc-input type="text" name="pathname"></pc-input>
+    <div class="relative">
+      <pc-input type="text" name="pathname"></pc-input>
+      <a if="{ record.pathname }" class="absolute right-0 top-0 h5 btn btn-narrow" href="/{ record.pathname }" target="_blank">
+        <i class="fa fa-external-link"></i>
+      </a>
+    </div>
     <h5>Metatags</h5>
     <pc-input-hash name="meta" items="{ record.meta || (record.meta = {}) }"></pc-input-hash>
     <pc-input type="checkbox" name="default"></pc-input>
