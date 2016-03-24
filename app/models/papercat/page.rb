@@ -9,6 +9,10 @@ module Papercat
       val = JSON.parse(val) if val.is_a?(String)
       write_store_attribute(:data, :meta, val)
     end
+    
+    def meta
+      super || {}
+    end
 
     def as_json options = {}
       super(options.update(methods: [:pathname, :title, :meta, :body, :default], except: [:data]))
