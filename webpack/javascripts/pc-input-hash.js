@@ -7,8 +7,8 @@ riot.tag('pc-input-hash',
   <div class="metatags mb2 border">
 
     <div class="clearfix border-bottom" each="{ name, content in opts.items }">
-      <input type="text" class="col col-4 border-none field rounded-left x-group-item" placeholder="Name" name="name" value="{ name }">
-      <input type="text" class="col col-6 border-none field not-rounded x-group-item" placeholder="Content" name="content" value="{ content }">
+      <input type="text" class="col col-4 border-none field rounded-left x-group-item" placeholder="Name" name="name" value="{ name }" oninput="{setName}">
+      <input type="text" class="col col-6 border-none field not-rounded x-group-item" placeholder="Content" name="content" value="{ content }" oninput="{setContent}">
       <a class="col col-2 center btn border-left bg-white red rounded-right" onclick="{ removeMetaTag }"><i class="fa fa-times"></i></a>
     </div>
 
@@ -44,6 +44,15 @@ riot.tag('pc-input-hash',
         this.opts.items[name] = content
         // this.opts.items.push({name: name, content: content})
       }
+    }
+
+    this.setName = (e) => {
+      this.opts.items[e.target.value] = this.opts.items[e.item.name]
+      delete this.opts.items[e.item.name]
+    }
+
+    this.setContent = (e) => {
+      this.opts.items[e.item.name]= e.target.value
     }
   }
 )

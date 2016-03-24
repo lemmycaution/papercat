@@ -33,7 +33,7 @@ riot.mixin('formMixin', {
       this.record = this.record || this.defaultRecord
     })
 
-    this.delete = (e) => {
+    this.delete = this.delete || (e) => {
       if (window.confirm('Are you sure?')) {
         opts.api.request('delete', `${ opts.resource }/${ this.record.id }`, null, () => {
           riot.route(opts.resource, opts.resource)
@@ -41,7 +41,7 @@ riot.mixin('formMixin', {
       }
     }
 
-    this.save = (e) => {
+    this.save = this.save || (e) => {
       this.$saveBtn = $(e.currentTarget)
       this.$saveBtn.orgHtml = this.$saveBtn.html()
       this.$saveBtn.html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', true)

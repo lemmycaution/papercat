@@ -29,7 +29,7 @@ riot.tag('pc-templates-form',
   function (opts) {
     this.defaultRecord = {format: 'html', handler: 'erb', locale: 'en'}
     this.modelName = opts.resource.substr(0, opts.resource.length - 1)
-    
+
     this.mixin('codeMirrorMixin')
     this.mixin('formMixin')
   }
@@ -48,7 +48,7 @@ riot.tag('pc-javascripts-form',
   function (opts) {
     this.defaultRecord = {format: 'html', handler: 'erb', locale: 'en'}
     this.modelName = opts.resource.substr(0, opts.resource.length - 1)
-    
+
     this.mixin('codeMirrorMixin')
     this.mixin('formMixin')
   }
@@ -67,7 +67,7 @@ riot.tag('pc-stylesheets-form',
   function (opts) {
     this.defaultRecord = {}
     this.modelName = opts.resource.substr(0, opts.resource.length - 1)
-    
+
     this.mixin('codeMirrorMixin')
     this.mixin('formMixin')
   }
@@ -81,7 +81,7 @@ riot.tag('pc-pages-form',
     <pc-input type="text" name="title"></pc-input>
     <pc-input type="text" name="pathname"></pc-input>
     <h5>Metatags</h5>
-    <pc-input-hash name="meta" items="{ record.meta }"></pc-input-hash>
+    <pc-input-hash name="meta" items="{ record.meta || (record.meta = {}) }"></pc-input-hash>
     <pc-input type="checkbox" name="default"></pc-input>
     <pc-textarea name="body" class="code" mode="htmlmixed"></pc-textarea>
     <pc-textarea name="body" class="wyswyg" ></pc-textarea>
@@ -91,7 +91,7 @@ riot.tag('pc-pages-form',
   function (opts) {
     this.defaultRecord = {meta: {}}
     this.modelName = opts.resource.substr(0, opts.resource.length - 1)
-    
+
     this.currentEditorIcon = 'eye'
     this.currentEditor
     this.toggleEditor = (e) => {
@@ -107,13 +107,30 @@ riot.tag('pc-pages-form',
         this.currentEditorIcon = 'code'
         // this.tinyMce.hide()
         // $('.CodeMirror.cm-s-default', this.root).css({display: 'block'})
-        $('.code', this.root).toggleClass('hide', false)        
+        $('.code', this.root).toggleClass('hide', false)
         $('.wyswyg', this.root).toggleClass('hide', true)
       }
     }
-    
+
     this.on('mount', () => $('.code', this.root).toggleClass('hide', true))
-    
+
+    this.save = this.save || (e) => {
+      this.$saveBtn = $(e.currentTarget)
+      this.$saveBtn.orgHtml = this.$saveBtn.html()
+      this.$saveBtn.html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', true)
+
+      e.preventDefault()
+      // instead of fighting with rails strong param for dynamic hashes lets send json string and parse it in model ;)
+      this.record.meta = JSON.stringify(this.record.meta)
+      let data = {[this.modelName]: this.record}
+
+      if (this.record.id) {
+        opts.api.request('put', `${ opts.resource }/${ this.record.id }`, data)
+      } else {
+        opts.api.request('post', opts.resource, data)
+      }
+    }
+
     this.mixin('tinymceMixin')
     this.mixin('codeMirrorMixin')
     this.mixin('formMixin')

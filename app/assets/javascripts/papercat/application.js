@@ -12590,6 +12590,8 @@
 	
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 	
+	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
+	
 	var $ = _interopRequire(__webpack_require__(4));
 	
 	var riot = _interopRequire(__webpack_require__(1));
@@ -12632,7 +12634,7 @@
 	  this.mixin("formMixin");
 	});
 	
-	riot.tag("pc-pages-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"title\"></pc-input>\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <h5>Metatags</h5>\n    <pc-input-hash name=\"meta\" items=\"{ record.meta }\"></pc-input-hash>\n    <pc-input type=\"checkbox\" name=\"default\"></pc-input>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n    <pc-textarea name=\"body\" class=\"wyswyg\" ></pc-textarea>\n  </form>\n  ", function (opts) {
+	riot.tag("pc-pages-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"title\"></pc-input>\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <h5>Metatags</h5>\n    <pc-input-hash name=\"meta\" items=\"{ record.meta || (record.meta = {}) }\"></pc-input-hash>\n    <pc-input type=\"checkbox\" name=\"default\"></pc-input>\n    <pc-textarea name=\"body\" class=\"code\" mode=\"htmlmixed\"></pc-textarea>\n    <pc-textarea name=\"body\" class=\"wyswyg\" ></pc-textarea>\n  </form>\n  ", function (opts) {
 	  var _this = this;
 	
 	  this.defaultRecord = { meta: {} };
@@ -12662,6 +12664,23 @@
 	    return $(".code", _this.root).toggleClass("hide", true);
 	  });
 	
+	  this.save = this.save || function (e) {
+	    _this.$saveBtn = $(e.currentTarget);
+	    _this.$saveBtn.orgHtml = _this.$saveBtn.html();
+	    _this.$saveBtn.html("<i class=\"fa fa-refresh fa-spin\"></i>").attr("disabled", true);
+	
+	    e.preventDefault();
+	    // instead of fighting with rails strong param for dynamic hashes lets send json string and parse it in model ;)
+	    _this.record.meta = JSON.stringify(_this.record.meta);
+	    var data = _defineProperty({}, _this.modelName, _this.record);
+	
+	    if (_this.record.id) {
+	      opts.api.request("put", "" + opts.resource + "/" + _this.record.id, data);
+	    } else {
+	      opts.api.request("post", opts.resource, data);
+	    }
+	  };
+	
 	  this.mixin("tinymceMixin");
 	  this.mixin("codeMirrorMixin");
 	  this.mixin("formMixin");
@@ -12677,7 +12696,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-input", "\n  <label if=\"{ opts.type === 'checkbox'  }\" class=\"inline-block mb2\"><input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" checked=\"{ parent.record[opts.name] }\" /> { opts.name }</label>\n  <label if=\"{ opts.type === 'radio'  }\" class=\"inline-block mb2\"><input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" selected=\"{ parent.record[opts.name] }\" /> { opts.name }</label>\n  <input if=\"{ opts.type !== 'checkbox' && opts.type !== 'radio' }\" class=\"block col-12 mb2 field\" type=\"{ opts.type }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" value=\"{ parent.record[opts.name] }\" />\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
+	riot.tag("pc-input", "\n  <label if=\"{ opts.type === 'checkbox'  }\" class=\"inline-block mb2\">\n    <input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" checked=\"{ parent.record[opts.name] }\" /> { opts.name }\n  </label>\n  <label if=\"{ opts.type === 'radio'  }\" class=\"inline-block mb2\">\n    <input type=\"{ opts.type }\" name=\"{ opts.name }\" onchange=\"{ setValueByName }\" selected=\"{ parent.record[opts.name] }\" /> { opts.name }\n  </label>\n  <input if=\"{ opts.type !== 'checkbox' && opts.type !== 'radio' }\" class=\"block col-12 mb2 field\" type=\"{ opts.type }\" name=\"{ opts.name }\" placeholder=\"{ opts.name }\" oninput=\"{ setValueByName }\" value=\"{ parent.record[opts.name] }\" />\n  <small if=\"{ parent.errors[opts.name] }\" class=\"inline-error\">{ parent.errors[opts.name].join(', ') }</small>\n  ", function (opts) {
 	  this.mixin("setValueByNameMixin");
 	});
 
@@ -12705,7 +12724,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-input-hash", "\n  <div class=\"metatags mb2 border\">\n\n    <div class=\"clearfix border-bottom\" each=\"{ name, content in opts.items }\">\n      <input type=\"text\" class=\"col col-4 border-none field rounded-left x-group-item\" placeholder=\"Name\" name=\"name\" value=\"{ name }\">\n      <input type=\"text\" class=\"col col-6 border-none field not-rounded x-group-item\" placeholder=\"Content\" name=\"content\" value=\"{ content }\">\n      <a class=\"col col-2 center btn border-left bg-white red rounded-right\" onclick=\"{ removeMetaTag }\"><i class=\"fa fa-times\"></i></a>\n    </div>\n\n    <div class=\"clearfix\">\n      <input name=\"metaTagName\" type=\"text\" class=\"col col-4 border-none  field rounded-left x-group-item\" placeholder=\"Name\">\n      <input name=\"metaTagContent\" type=\"text\" class=\"col col-6 border-none  field not-rounded x-group-item\" placeholder=\"Content\" >\n      <a class=\"col col-2 center btn border-left bg-white rounded-right\" onclick=\"{ addMetaTag }\"><i class=\"fa fa-plus\"></i></a>\n    </div>\n\n  </div>\n  ", function (opts) {
+	riot.tag("pc-input-hash", "\n  <div class=\"metatags mb2 border\">\n\n    <div class=\"clearfix border-bottom\" each=\"{ name, content in opts.items }\">\n      <input type=\"text\" class=\"col col-4 border-none field rounded-left x-group-item\" placeholder=\"Name\" name=\"name\" value=\"{ name }\" oninput=\"{setName}\">\n      <input type=\"text\" class=\"col col-6 border-none field not-rounded x-group-item\" placeholder=\"Content\" name=\"content\" value=\"{ content }\" oninput=\"{setContent}\">\n      <a class=\"col col-2 center btn border-left bg-white red rounded-right\" onclick=\"{ removeMetaTag }\"><i class=\"fa fa-times\"></i></a>\n    </div>\n\n    <div class=\"clearfix\">\n      <input name=\"metaTagName\" type=\"text\" class=\"col col-4 border-none  field rounded-left x-group-item\" placeholder=\"Name\">\n      <input name=\"metaTagContent\" type=\"text\" class=\"col col-6 border-none  field not-rounded x-group-item\" placeholder=\"Content\" >\n      <a class=\"col col-2 center btn border-left bg-white rounded-right\" onclick=\"{ addMetaTag }\"><i class=\"fa fa-plus\"></i></a>\n    </div>\n\n  </div>\n  ", function (opts) {
 	  var _this = this;
 	
 	  this.removeMetaTag = function (e) {
@@ -12731,6 +12750,15 @@
 	      // this.opts.items.push({name: name, content: content})
 	      ;
 	    }
+	  };
+	
+	  this.setName = function (e) {
+	    _this.opts.items[e.target.value] = _this.opts.items[e.item.name];
+	    delete _this.opts.items[e.item.name];
+	  };
+	
+	  this.setContent = function (e) {
+	    _this.opts.items[e.item.name] = e.target.value;
 	  };
 	});
 
@@ -12797,7 +12825,7 @@
 	      _this.record = _this.record || _this.defaultRecord;
 	    });
 	
-	    this["delete"] = function (e) {
+	    this["delete"] = this["delete"] || function (e) {
 	      if (window.confirm("Are you sure?")) {
 	        opts.api.request("delete", "" + opts.resource + "/" + _this.record.id, null, function () {
 	          riot.route(opts.resource, opts.resource);
@@ -12805,7 +12833,7 @@
 	      }
 	    };
 	
-	    this.save = function (e) {
+	    this.save = this.save || function (e) {
 	      _this.$saveBtn = $(e.currentTarget);
 	      _this.$saveBtn.orgHtml = _this.$saveBtn.html();
 	      _this.$saveBtn.html("<i class=\"fa fa-refresh fa-spin\"></i>").attr("disabled", true);
