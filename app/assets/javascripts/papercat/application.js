@@ -12497,7 +12497,7 @@
 	  });
 	
 	  riot.route("/", function () {
-	    _this.update({ view: "index", resource: "pages", id: null });
+	    riot.route("/pages", "Pages", true);
 	  });
 	
 	  riot.route("/*", function (resource) {
@@ -12530,7 +12530,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-header", "\n  <header class=\"fixed top-0 left-0 right-0 bg-darken-4 white z4\">\n\n    <div class=\"logo fa-stack inline-block\">\n      <i class=\"fa fa-file-o fa-stack-2x\"></i>\n      <i class=\"fa fa-paw fa-stack-1x\"></i>\n    </div>\n\n    <a if=\"{ opts.view === 'index' }\" class=\"btn btn-narrow\" href=\"{ parent.resource }/new\" title=\"{ parent.resource } / new\" onclick=\"{ parent.navigate }\"><i class=\"fa fa-plus\"></i></a>\n    <virtual if=\"{ opts.view === 'form' }\">\n      <button class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.save }\"><i class=\"fa fa-floppy-o\"></i></button>\n      <button if=\"{ parent.tags.main.opts.id }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.delete }\"><i class=\"fa fa-trash-o\"></i></button>\n\n      <button if=\"{ parent.tags.main.opts.resource === 'pages' }\" class=\"btn btn-narrow\" onclick=\"{ parent.tags.main.toggleEditor }\"><i class=\"fa fa-{ parent.tags.main.currentEditorIcon }\"></i></button>\n\n    </virtual>\n  </header>\n  ", "pc-header .logo { transform:scale(0.5);margin-top: -3px; }", function (opts) {});
+	riot.tag("pc-header", "\n  <header class=\"fixed top-0 left-0 right-0 bg-darken-4 white z4\">\n\n    <div class=\"logo fa-stack inline-block\">\n      <i class=\"fa fa-file-o fa-stack-2x\"></i>\n      <i class=\"fa fa-paw fa-stack-1x\"></i>\n    </div>\n\n    <a if=\"{ opts.view === 'index' }\" class=\"h5 btn btn-small btn-primary m1\" href=\"{ parent.resource }/new\"\n      title=\"{ parent.resource } / new\" onclick=\"{ parent.navigate }\">\n      <i class=\"fa fa-plus\"></i>\n    </a>\n    <virtual if=\"{ opts.view === 'form' }\">\n      <button class=\"h5 btn btn-small bg-green white m1\" onclick=\"{ parent.tags.main.save }\">\n        <i class=\"fa fa-floppy-o\"></i>\n      </button>\n      <button if=\"{ parent.tags.main.opts.id }\" class=\"h5 btn btn-small bg-red white m1\" onclick=\"{ parent.tags.main.delete }\">\n        <i class=\"fa fa-trash-o\"></i>\n      </button>\n\n      <button if=\"{ parent.tags.main.opts.resource === 'pages' }\" class=\"h5 btn btn-small bg-white gray m1\" onclick=\"{ parent.tags.main.toggleEditor }\">\n        <i class=\"fa fa-{ parent.tags.main.currentEditorIcon }\"></i>\n      </button>\n\n    </virtual>\n  </header>\n  ", "pc-header .logo { transform:scale(0.5);margin-top: -3px; }", function (opts) {});
 
 /***/ },
 /* 7 */
@@ -12566,7 +12566,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-thumb", "\n  <div class=\"col col-3 center\">\n    <a class=\"inline-block p2 bg-white\" href=\"{ parent.opts.resource }/{ id }/edit\" title=\"{ parent.opts.resource } / edit\" onclick=\"{ parent.opts.navigate }\">\n      <i class=\"fa fa-file\"></i>\n      <h6 class=\"break-word\">{ pathname }</h6>\n    </a>\n  </div>\n  ", function (opts) {});
+	riot.tag("pc-thumb", "\n  <div class=\"col col-3 center\">\n    <a class=\"block p2 bg-white rounded\" href=\"{ parent.opts.resource }/{ id }/edit\" title=\"{ parent.opts.resource } / edit\" onclick=\"{ parent.opts.navigate }\">\n      <i class=\"fa fa-file fa-2x\"></i>\n      <h6 class=\"break-word\">{ title }<br><small>/{ pathname }</small></h6>\n    </a>\n  </div>\n  ", function (opts) {});
 
 /***/ },
 /* 9 */
@@ -12846,6 +12846,7 @@
 	      var $textarea = $("textarea.wyswyg", _this.root);
 	      $textarea.addClass("hide");
 	      _this.wyswygFieldName = $textarea.attr("name");
+	
 	      $.getScript("//cdn.tinymce.com/4/tinymce.min.js").then(function () {
 	        tinymce.init({
 	          plugins: "autoresize image media textcolor paste",
@@ -12875,9 +12876,21 @@
 	          _this.on("before-unmount", function () {
 	            _this.tinyMce.destroy();
 	          });
+	
+	          _this.$toolbar = $(".mce-toolbar-grp");
+	          _this.tTop = _this.$toolbar.offset().top;
+	          $(window).on("scroll", _this.onScroll);
 	        });
 	      });
 	    });
+	
+	    this.on("unmount", function () {
+	      $(window).off("scroll", _this.onScroll);
+	    });
+	
+	    this.onScroll = function (e) {
+	      _this.$toolbar.toggleClass("fixed", _this.tTop <= document.scrollingElement.scrollTop);
+	    };
 	  }
 	});
 

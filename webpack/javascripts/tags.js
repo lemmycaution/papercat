@@ -20,7 +20,7 @@ riot.tag('pc-app',
       e.preventDefault()
       riot.route(e.currentTarget.getAttribute('href'), e.currentTarget.title)
     }
-    
+
     this.on('update', () => {
       if (this.view && this.resource) {
         let tag = this.view === 'index' ? `pc-${this.view}` : `pc-${this.resource}-${this.view}`
@@ -29,30 +29,25 @@ riot.tag('pc-app',
     })
 
     riot.route('/', () => {
-      this.update({view: 'index', resource: 'pages', id: null})
+      riot.route('/pages', 'Pages', true)
     })
-    
+
     riot.route('/*', (resource) => {
       this.update({view: 'index', resource, id: null})
       opts.api.request('get', resource)
     })
-    
+
     riot.route('/*/new', (resource) => {
       this.update({view: 'form', resource, id: null})
     })
-    
+
     riot.route('/*/*/edit', (resource, id) => {
       this.update({view: 'form', resource, id})
     })
-    
+
     opts.api.on('request.error.404', () => riot.route('/'))
-    
+
     riot.route.start(true)
   }
 
 );
-
-
-
-
-

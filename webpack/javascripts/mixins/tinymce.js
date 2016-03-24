@@ -9,6 +9,7 @@ riot.mixin('tinymceMixin', {
       let $textarea = $('textarea.wyswyg', this.root)
       $textarea.addClass('hide')
       this.wyswygFieldName = $textarea.attr('name')
+
       $.getScript('//cdn.tinymce.com/4/tinymce.min.js').then(() => {
         tinymce
         .init({
@@ -40,8 +41,21 @@ riot.mixin('tinymceMixin', {
           this.on('before-unmount', () => {
             this.tinyMce.destroy()
           })
+
+          this.$toolbar = $('.mce-toolbar-grp')
+          this.tTop = this.$toolbar.offset().top
+          $(window).on('scroll', this.onScroll)
+
         })
       })
     })
+
+    this.on('unmount', () => {
+      $(window).off('scroll', this.onScroll)
+    })
+
+    this.onScroll = (e) => {
+      this.$toolbar.toggleClass('fixed', this.tTop <= document.scrollingElement.scrollTop)
+    }
   }
 })
