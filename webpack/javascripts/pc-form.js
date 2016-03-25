@@ -119,7 +119,7 @@ riot.tag('pc-pages-form',
 
     this.on('mount', () => $('.code', this.root).toggleClass('hide', true))
 
-    this.save = this.save || (e) => {
+    this.save = (e) => {
       this.$saveBtn = $(e.currentTarget)
       this.$saveBtn.orgHtml = this.$saveBtn.html()
       this.$saveBtn.html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', true)
@@ -134,6 +134,20 @@ riot.tag('pc-pages-form',
       } else {
         opts.api.request('post', opts.resource, data)
       }
+    }
+
+    this.onUpdate = () => {
+      this.record = this.record || this.defaultRecord
+      if (typeof this.record.meta === 'string') this.record.meta = JSON.parse(this.record.meta)
+    }
+
+    this.onRequestSuccess =  (record) => {
+      if (record) {
+        if (typeof record.meta === 'string') record.meta = JSON.parse(record.meta)
+        this.update({record})
+        riot.route(`${ opts.resource }/${ record.id }/edit`, `${ opts.resource } / edit`, true)
+      }
+      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
     }
 
     this.mixin('tinymceMixin')

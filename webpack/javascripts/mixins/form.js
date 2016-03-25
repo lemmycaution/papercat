@@ -6,32 +6,19 @@ import riot from 'riot';
 riot.mixin('formMixin', {
   init: function () {
     let opts = this.opts;
-    let onRequestSuccess = (record) => {
-      if (record) {
-        this.update({record})
-        riot.route(`${ opts.resource }/${ record.id }/edit`, `${ opts.resource } / edit`, true)
-      }
-      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
-    }
-    let onRequestError = (xhr) => {
-      if (xhr.status === 422) this.update({errors: xhr.responseJSON.errors})
-      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
-    }
 
     this.on('mount', () => {
-      opts.api.on('request.error', onRequestError)
-      opts.api.on('request.success', onRequestSuccess)
+      opts.api.on('request.error', this.onRequestError)
+      opts.api.on('request.success', this.onRequestSuccess)
       if (opts.id) opts.api.request('get', `${ opts.resource }/${ opts.id }`)
     })
 
     this.on('before-unmount', () => {
-      opts.api.off('request.error', onRequestError)
-      opts.api.off('request.success', onRequestSuccess)
+      opts.api.off('request.error', this.onRequestError)
+      opts.api.off('request.success', this.onRequestSuccess)
     })
 
-    this.on('update', () => {
-      this.record = this.record || this.defaultRecord
-    })
+    this.on('update', this.onUpdate)
 
     this.delete = this.delete || (e) => {
       if (window.confirm('Are you sure?')) {
@@ -54,6 +41,23 @@ riot.mixin('formMixin', {
       } else {
         opts.api.request('post', opts.resource, data)
       }
+    }
+
+    this.onUpdate = this.onUpdate || () => {
+      this.record = this.record || this.defaultRecord
+    }
+
+    this.onRequestSuccess = this.onRequestSuccess || (record) => {
+      if (record) {
+        this.update({record})
+        riot.route(`${ opts.resource }/${ record.id }/edit`, `${ opts.resource } / edit`, true)
+      }
+      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
+    }
+
+    this.onRequestError = this.onRequestError || (xhr) => {
+      if (xhr.status === 422) this.update({errors: xhr.responseJSON.errors})
+      if (this.$saveBtn) this.$saveBtn.html(this.$saveBtn.orgHtml).removeAttr('disabled')
     }
 
     this.ignoreSubmit = (e) => e.preventDefault()

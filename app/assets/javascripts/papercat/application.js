@@ -12566,7 +12566,7 @@
 	
 	var riot = _interopRequire(__webpack_require__(1));
 	
-	riot.tag("pc-thumb", "\n  <div class=\"col col-3 center\">\n    <a class=\"block p2 bg-white rounded\" href=\"{ parent.opts.resource }/{ id }/edit\" title=\"{ parent.opts.resource } / edit\" onclick=\"{ parent.opts.navigate }\">\n      <i class=\"fa fa-file fa-2x\"></i>\n      <h6 class=\"break-word\">{ title }<br><small>/{ pathname }</small></h6>\n    </a>\n  </div>\n  ", function (opts) {});
+	riot.tag("pc-thumb", "\n  <div class=\"sm-col sm-col-3 center p1\">\n    <a class=\"block p2 bg-white rounded\" href=\"{ parent.opts.resource }/{ id }/edit\" title=\"{ parent.opts.resource } / edit\" onclick=\"{ parent.opts.navigate }\">\n      <i class=\"fa fa-file fa-2x\"></i>\n      <h6 class=\"break-word\">{ title }<br><small>/{ pathname }</small></h6>\n    </a>\n  </div>\n  ", function (opts) {});
 
 /***/ },
 /* 9 */
@@ -12664,7 +12664,7 @@
 	    return $(".code", _this.root).toggleClass("hide", true);
 	  });
 	
-	  this.save = this.save || function (e) {
+	  this.save = function (e) {
 	    _this.$saveBtn = $(e.currentTarget);
 	    _this.$saveBtn.orgHtml = _this.$saveBtn.html();
 	    _this.$saveBtn.html("<i class=\"fa fa-refresh fa-spin\"></i>").attr("disabled", true);
@@ -12679,6 +12679,20 @@
 	    } else {
 	      opts.api.request("post", opts.resource, data);
 	    }
+	  };
+	
+	  this.onUpdate = function () {
+	    _this.record = _this.record || _this.defaultRecord;
+	    if (typeof _this.record.meta === "string") _this.record.meta = JSON.parse(_this.record.meta);
+	  };
+	
+	  this.onRequestSuccess = function (record) {
+	    if (record) {
+	      if (typeof record.meta === "string") record.meta = JSON.parse(record.meta);
+	      _this.update({ record: record });
+	      riot.route("" + opts.resource + "/" + record.id + "/edit", "" + opts.resource + " / edit", true);
+	    }
+	    if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
 	  };
 	
 	  this.mixin("tinymceMixin");
@@ -12798,32 +12812,19 @@
 	    var _this = this;
 	
 	    var opts = this.opts;
-	    var onRequestSuccess = function (record) {
-	      if (record) {
-	        _this.update({ record: record });
-	        riot.route("" + opts.resource + "/" + record.id + "/edit", "" + opts.resource + " / edit", true);
-	      }
-	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
-	    };
-	    var onRequestError = function (xhr) {
-	      if (xhr.status === 422) _this.update({ errors: xhr.responseJSON.errors });
-	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
-	    };
 	
 	    this.on("mount", function () {
-	      opts.api.on("request.error", onRequestError);
-	      opts.api.on("request.success", onRequestSuccess);
+	      opts.api.on("request.error", _this.onRequestError);
+	      opts.api.on("request.success", _this.onRequestSuccess);
 	      if (opts.id) opts.api.request("get", "" + opts.resource + "/" + opts.id);
 	    });
 	
 	    this.on("before-unmount", function () {
-	      opts.api.off("request.error", onRequestError);
-	      opts.api.off("request.success", onRequestSuccess);
+	      opts.api.off("request.error", _this.onRequestError);
+	      opts.api.off("request.success", _this.onRequestSuccess);
 	    });
 	
-	    this.on("update", function () {
-	      _this.record = _this.record || _this.defaultRecord;
-	    });
+	    this.on("update", this.onUpdate);
 	
 	    this["delete"] = this["delete"] || function (e) {
 	      if (window.confirm("Are you sure?")) {
@@ -12846,6 +12847,23 @@
 	      } else {
 	        opts.api.request("post", opts.resource, data);
 	      }
+	    };
+	
+	    this.onUpdate = this.onUpdate || function () {
+	      _this.record = _this.record || _this.defaultRecord;
+	    };
+	
+	    this.onRequestSuccess = this.onRequestSuccess || function (record) {
+	      if (record) {
+	        _this.update({ record: record });
+	        riot.route("" + opts.resource + "/" + record.id + "/edit", "" + opts.resource + " / edit", true);
+	      }
+	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
+	    };
+	
+	    this.onRequestError = this.onRequestError || function (xhr) {
+	      if (xhr.status === 422) _this.update({ errors: xhr.responseJSON.errors });
+	      if (_this.$saveBtn) _this.$saveBtn.html(_this.$saveBtn.orgHtml).removeAttr("disabled");
 	    };
 	
 	    this.ignoreSubmit = function (e) {
