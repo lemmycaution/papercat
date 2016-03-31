@@ -12671,7 +12671,10 @@
 	
 	    e.preventDefault();
 	    // instead of fighting with rails strong param for dynamic hashes lets send json string and parse it in model ;)
-	    _this.record.meta = JSON.stringify(_this.record.meta);
+	    // but ensure to not stringify already stringified json
+	    if (typeof _this.record.meta !== "string") {
+	      _this.record.meta = JSON.stringify(_this.record.meta);
+	    }
 	    var data = _defineProperty({}, _this.modelName, _this.record);
 	
 	    if (_this.record.id) {

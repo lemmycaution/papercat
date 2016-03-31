@@ -126,7 +126,10 @@ riot.tag('pc-pages-form',
 
       e.preventDefault()
       // instead of fighting with rails strong param for dynamic hashes lets send json string and parse it in model ;)
-      this.record.meta = JSON.stringify(this.record.meta)
+      // but ensure to not stringify already stringified json
+      if (typeof this.record.meta !== 'string') {
+        this.record.meta = JSON.stringify(this.record.meta)
+      }
       let data = {[this.modelName]: this.record}
 
       if (this.record.id) {
