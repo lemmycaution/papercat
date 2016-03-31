@@ -12619,7 +12619,7 @@
 	});
 	
 	riot.tag("pc-javascripts-form", "\n  <form class=\"px2\" onsubmit=\"{ ignoreSubmit }\">\n    <pc-input type=\"text\" name=\"pathname\"></pc-input>\n    <pc-textarea name=\"source\" class=\"code\" mode=\"javascript\"></pc-textarea>\n  </form>\n  ", function (opts) {
-	  this.defaultRecord = { format: "html", handler: "erb", locale: "en" };
+	  this.defaultRecord = {};
 	  this.modelName = opts.resource.substr(0, opts.resource.length - 1);
 	
 	  this.mixin("codeMirrorMixin");
@@ -12815,6 +12815,7 @@
 	    var _this = this;
 	
 	    var opts = this.opts;
+	    this.record = this.record || this.defaultRecord;
 	
 	    this.on("mount", function () {
 	      opts.api.on("request.error", _this.onRequestError);

@@ -11,7 +11,7 @@ import 'codemirror/mode/css/css';
 
 riot.mixin('codeMirrorMixin', {
   init: function () {
-    
+
     this.on('mount',  () => {
       let $textarea = $('textarea.code', this.root)
       this.codeFieldName = $textarea.attr('name')
@@ -25,7 +25,7 @@ riot.mixin('codeMirrorMixin', {
         $textarea.val(this.record[this.codeFieldName])
       })
     })
-    
+
     this.on('update', () => {
       if (this.record && this.record[this.codeFieldName]) {
         this.codeMirror.setValue(this.record[this.codeFieldName])

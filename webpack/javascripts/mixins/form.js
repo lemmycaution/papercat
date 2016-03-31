@@ -6,6 +6,7 @@ import riot from 'riot';
 riot.mixin('formMixin', {
   init: function () {
     let opts = this.opts;
+    this.record = this.record || this.defaultRecord;
 
     this.on('mount', () => {
       opts.api.on('request.error', this.onRequestError)

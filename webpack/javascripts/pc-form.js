@@ -46,7 +46,7 @@ riot.tag('pc-javascripts-form',
   `,
 
   function (opts) {
-    this.defaultRecord = {format: 'html', handler: 'erb', locale: 'en'}
+    this.defaultRecord = {}
     this.modelName = opts.resource.substr(0, opts.resource.length - 1)
 
     this.mixin('codeMirrorMixin')
