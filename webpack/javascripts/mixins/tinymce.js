@@ -13,7 +13,7 @@ riot.mixin('tinymceMixin', {
       $.getScript('//cdn.tinymce.com/4/tinymce.min.js').then(() => {
         tinymce
         .init({
-          plugins: 'autoresize image media textcolor paste',
+          plugins: 'autoresize image media textcolor paste link',
           selector:'textarea.wyswyg',
           toolbar: 'undo redo | fontselect fontsizeselect styleselect forecolor backcolor | link unlink image media',
           menubar: false,
